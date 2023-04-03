@@ -54,7 +54,7 @@ func goPackage(dir string) string {
 	mfd := modFileDir()
 	mn := modName()
 	path := strings.TrimPrefix(dir, mfd)
-	return mn + path
+	return mn + strings.ReplaceAll(path, "\\", "/")
 }
 
 func toUpperCamelCase(s string) string {
