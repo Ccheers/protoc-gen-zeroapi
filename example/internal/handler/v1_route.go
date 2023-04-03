@@ -13,7 +13,7 @@ import (
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the Ccheers/protoc-gen-zeroapi package it is being compiled against.
-func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+func Register_BlogServiceHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		rest.WithMiddlewares(
 			[]rest.Middleware{},

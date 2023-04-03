@@ -59,7 +59,7 @@ func genZeroService(rootPackage, svcContextPackage protogen.GoImportPath, file *
 		}
 	}
 
-	g.P("func RegisterHandlers(server *", restPackage.Ident("Server"), ", serverCtx *", svcContextPackage.Ident("ServiceContext"), ") {")
+	g.P("func Register_", s.GoName, "Handlers(server *", restPackage.Ident("Server"), ", serverCtx *", svcContextPackage.Ident("ServiceContext"), ") {")
 	generateZeroMethodList(svcContextPackage, g, sd)
 	g.P("}")
 	generateZeroHandler(rootPackage, svcContextPackage, g, sd)
