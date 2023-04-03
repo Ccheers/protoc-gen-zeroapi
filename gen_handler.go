@@ -100,9 +100,15 @@ func generateZeroHandler(rootPackage, svcContextPackage protogen.GoImportPath, g
 
 		g.P("return func (w ", netHTTPPkg.Ident("ResponseWriter"), ", r *", netHTTPPkg.Ident("Request"), ") {")
 		g.P("var req ", m.Request)
+
+		g.P("if err := ", httpxPackage.Ident("Parse"), "(r, &req); err != nil {")
+		g.P("svcCtx.ResponseEncodeFunc(r, w, nil, err)")
+		g.P("return")
+		g.P("}")
+
 		g.P("l := ", logicPath.Ident(fmt.Sprintf("New%sLogic", m.Name)), "(r.Context(), svcCtx)")
 		g.P("resp, err := l.", m.Name, "(&req)")
-		g.P("svcCtx.ResponseEncodeFunc(w, resp, err)")
+		g.P("svcCtx.ResponseEncodeFunc(r, w, resp, err)")
 		g.P("}")
 
 		g.P("}")

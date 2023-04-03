@@ -2,7 +2,6 @@ package logic
 
 import (
 	context "context"
-
 	v1 "github.com/Ccheers/protoc-gen-zeroapi/example/api/product/app/v1"
 	svc "github.com/Ccheers/protoc-gen-zeroapi/example/internal/svc"
 	logx "github.com/zeromicro/go-zero/core/logx"
@@ -23,7 +22,6 @@ func NewGetArticlesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAr
 		svcCtx: svcCtx,
 	}
 }
-
 func (l *GetArticlesLogic) GetArticles(req *v1.GetArticlesReq) (*v1.GetArticlesResp, error) {
-	panic("implement me222")
+	panic("implement me")
 }

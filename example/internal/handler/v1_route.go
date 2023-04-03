@@ -57,36 +57,36 @@ func Register_BlogServiceHandlers(server *rest.Server, svcCtx *svc.ServiceContex
 func GetArticles_0_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.GetArticlesReq
-		l := logic.NewGetArticlesLogic(r.Context(), svcCtx)
-		resp, err := l.GetArticles(&req)
-		if err != nil {
-			httpx.Error(w, err)
+		if err := httpx.Parse(r, &req); err != nil {
+			svcCtx.ResponseEncodeFunc(r, w, nil, err)
 			return
 		}
-		httpx.WriteJson(w, http.StatusOK, resp)
+		l := logic.NewGetArticlesLogic(r.Context(), svcCtx)
+		resp, err := l.GetArticles(&req)
+		svcCtx.ResponseEncodeFunc(r, w, resp, err)
 	}
 }
 func GetArticles_1_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.GetArticlesReq
-		l := logic.NewGetArticlesLogic(r.Context(), svcCtx)
-		resp, err := l.GetArticles(&req)
-		if err != nil {
-			httpx.Error(w, err)
+		if err := httpx.Parse(r, &req); err != nil {
+			svcCtx.ResponseEncodeFunc(r, w, nil, err)
 			return
 		}
-		httpx.WriteJson(w, http.StatusOK, resp)
+		l := logic.NewGetArticlesLogic(r.Context(), svcCtx)
+		resp, err := l.GetArticles(&req)
+		svcCtx.ResponseEncodeFunc(r, w, resp, err)
 	}
 }
 func CreateArticle_0_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.Article
-		l := logic.NewCreateArticleLogic(r.Context(), svcCtx)
-		resp, err := l.CreateArticle(&req)
-		if err != nil {
-			httpx.Error(w, err)
+		if err := httpx.Parse(r, &req); err != nil {
+			svcCtx.ResponseEncodeFunc(r, w, nil, err)
 			return
 		}
-		httpx.WriteJson(w, http.StatusOK, resp)
+		l := logic.NewCreateArticleLogic(r.Context(), svcCtx)
+		resp, err := l.CreateArticle(&req)
+		svcCtx.ResponseEncodeFunc(r, w, resp, err)
 	}
 }

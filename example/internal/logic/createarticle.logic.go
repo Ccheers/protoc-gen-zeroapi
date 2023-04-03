@@ -2,7 +2,6 @@ package logic
 
 import (
 	context "context"
-
 	v1 "github.com/Ccheers/protoc-gen-zeroapi/example/api/product/app/v1"
 	svc "github.com/Ccheers/protoc-gen-zeroapi/example/internal/svc"
 	logx "github.com/zeromicro/go-zero/core/logx"
@@ -23,7 +22,6 @@ func NewCreateArticleLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cre
 		svcCtx: svcCtx,
 	}
 }
-
 func (l *CreateArticleLogic) CreateArticle(req *v1.Article) (*v1.Article, error) {
 	panic("implement me")
 }
