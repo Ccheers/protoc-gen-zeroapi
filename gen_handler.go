@@ -102,11 +102,7 @@ func generateZeroHandler(rootPackage, svcContextPackage protogen.GoImportPath, g
 		g.P("var req ", m.Request)
 		g.P("l := ", logicPath.Ident(fmt.Sprintf("New%sLogic", m.Name)), "(r.Context(), svcCtx)")
 		g.P("resp, err := l.", m.Name, "(&req)")
-		g.P("if err != nil {")
-		g.P(httpxPackage.Ident("Error"), "(w, err)")
-		g.P("return")
-		g.P("}")
-		g.P(httpxPackage.Ident("WriteJson"), "(w, http.StatusOK, resp)")
+		g.P("svcCtx.ResponseEncodeFunc(w, resp, err)")
 		g.P("}")
 
 		g.P("}")

@@ -13,7 +13,7 @@ import (
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the Ccheers/protoc-gen-zeroapi package it is being compiled against.
-func Register_BlogServiceHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+func Register_BlogServiceHandlers(server *rest.Server, svcCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		rest.WithMiddlewares(
 			[]rest.Middleware{},
@@ -21,7 +21,7 @@ func Register_BlogServiceHandlers(server *rest.Server, serverCtx *svc.ServiceCon
 				{
 					Method:  "GET",
 					Path:    "/v1/author/:author_id/articles",
-					Handler: GetArticles_0_Handler(serverCtx),
+					Handler: GetArticles_0_Handler(svcCtx),
 				},
 			}...,
 		),
@@ -34,7 +34,7 @@ func Register_BlogServiceHandlers(server *rest.Server, serverCtx *svc.ServiceCon
 				{
 					Method:  "GET",
 					Path:    "/v1/articles",
-					Handler: GetArticles_1_Handler(serverCtx),
+					Handler: GetArticles_1_Handler(svcCtx),
 				},
 			}...,
 		),
@@ -47,7 +47,7 @@ func Register_BlogServiceHandlers(server *rest.Server, serverCtx *svc.ServiceCon
 				{
 					Method:  "POST",
 					Path:    "/v1/author/:author_id/articles",
-					Handler: CreateArticle_0_Handler(serverCtx),
+					Handler: CreateArticle_0_Handler(svcCtx),
 				},
 			}...,
 		),
