@@ -59,7 +59,7 @@ func genZeroService(rootPackage, svcContextPackage protogen.GoImportPath, file *
 		}
 	}
 
-	g.P("func Register_", s.GoName, "Handlers(server *", restPackage.Ident("Server"), ", serverCtx *", svcContextPackage.Ident("ServiceContext"), ") {")
+	g.P("func Register_", s.GoName, "Handlers(server *", restPackage.Ident("Server"), ", svcCtx *", svcContextPackage.Ident("ServiceContext"), ") {")
 	generateZeroMethodList(svcContextPackage, g, sd)
 	g.P("}")
 	generateZeroHandler(rootPackage, svcContextPackage, g, sd)
@@ -73,7 +73,7 @@ func generateZeroMethodList(svcContextPackage protogen.GoImportPath, g *protogen
 		// middleware
 		g.P("[]", restPackage.Ident("Middleware"), "{")
 		for _, name := range m.MiddlewareNames {
-			g.P(svcContextPackage.Ident(name), ",")
+			g.P("svcCtx.", name, ",")
 		}
 		g.P("},")
 
@@ -82,7 +82,7 @@ func generateZeroMethodList(svcContextPackage protogen.GoImportPath, g *protogen
 		g.P("{")
 		g.P("Method: ", fmt.Sprintf("\"%s\"", m.Method), ",")
 		g.P("Path: ", fmt.Sprintf("\"%s\"", m.Path), ",")
-		g.P("Handler: ", m.HandlerName(), "(serverCtx),")
+		g.P("Handler: ", m.HandlerName(), "(svcCtx),")
 		g.P("},")
 		g.P("}...,")
 
