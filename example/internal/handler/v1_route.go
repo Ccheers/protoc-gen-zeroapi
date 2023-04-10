@@ -3,7 +3,7 @@
 package handler
 
 import (
-	bind "github.com/Ccheers/bind"
+	http1 "github.com/Ccheers/bind/http"
 	v1 "github.com/Ccheers/protoc-gen-zeroapi/example/api/product/app/v1"
 	logic "github.com/Ccheers/protoc-gen-zeroapi/example/internal/logic"
 	svc "github.com/Ccheers/protoc-gen-zeroapi/example/internal/svc"
@@ -57,7 +57,7 @@ func Register_BlogServiceHandlers(server *rest.Server, svcCtx *svc.ServiceContex
 func GetArticles_0_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.GetArticlesReq
-		bind.TryMyBestBind(r, &req)
+		http1.TryMyBestBind(r, &req)
 		if validate, ok := (interface{})(&req).(interface{ Validate() error }); ok {
 			err := validate.Validate()
 			if err != nil {
@@ -73,7 +73,7 @@ func GetArticles_0_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 func GetArticles_1_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.GetArticlesReq
-		bind.TryMyBestBind(r, &req)
+		http1.TryMyBestBind(r, &req)
 		if validate, ok := (interface{})(&req).(interface{ Validate() error }); ok {
 			err := validate.Validate()
 			if err != nil {
@@ -89,7 +89,7 @@ func GetArticles_1_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 func CreateArticle_0_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.Article
-		bind.TryMyBestBind(r, &req)
+		http1.TryMyBestBind(r, &req)
 		if validate, ok := (interface{})(&req).(interface{ Validate() error }); ok {
 			err := validate.Validate()
 			if err != nil {

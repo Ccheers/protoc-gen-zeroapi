@@ -10,7 +10,7 @@ import (
 
 const (
 	restPackage = protogen.GoImportPath("github.com/zeromicro/go-zero/rest")
-	bindPackage = protogen.GoImportPath("github.com/Ccheers/bind")
+	bindPackage = protogen.GoImportPath("github.com/Ccheers/bind/http")
 )
 
 func genZeroHandler(outDir string, gen *protogen.Plugin, file *protogen.File) *protogen.GeneratedFile {
