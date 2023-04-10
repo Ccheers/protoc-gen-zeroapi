@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	restPackage  = protogen.GoImportPath("github.com/zeromicro/go-zero/rest")
-	httpxPackage = protogen.GoImportPath("github.com/zeromicro/go-zero/rest/httpx")
+	restPackage = protogen.GoImportPath("github.com/zeromicro/go-zero/rest")
+	bindPackage = protogen.GoImportPath("github.com/Ccheers/bind")
 )
 
 func genZeroHandler(outDir string, gen *protogen.Plugin, file *protogen.File) *protogen.GeneratedFile {
@@ -101,9 +101,14 @@ func generateZeroHandler(rootPackage, svcContextPackage protogen.GoImportPath, g
 		g.P("return func (w ", netHTTPPkg.Ident("ResponseWriter"), ", r *", netHTTPPkg.Ident("Request"), ") {")
 		g.P("var req ", m.Request)
 
-		g.P("if err := ", httpxPackage.Ident("Parse"), "(r, &req); err != nil {")
+		g.P(bindPackage.Ident("TryMyBestBind"), "(r, &req)")
+
+		g.P("if validate,ok := (interface{})(&req).(interface{ Validate() error });ok {")
+		g.P("err := validate.Validate()")
+		g.P("if err != nil {")
 		g.P("svcCtx.ResponseEncodeFunc(r, w, nil, err)")
 		g.P("return")
+		g.P("}")
 		g.P("}")
 
 		g.P("l := ", logicPath.Ident(fmt.Sprintf("New%sLogic", m.Name)), "(r.Context(), svcCtx)")

@@ -3,11 +3,11 @@
 package handler
 
 import (
+	bind "github.com/Ccheers/bind"
 	v1 "github.com/Ccheers/protoc-gen-zeroapi/example/api/product/app/v1"
 	logic "github.com/Ccheers/protoc-gen-zeroapi/example/internal/logic"
 	svc "github.com/Ccheers/protoc-gen-zeroapi/example/internal/svc"
 	rest "github.com/zeromicro/go-zero/rest"
-	httpx "github.com/zeromicro/go-zero/rest/httpx"
 	http "net/http"
 )
 
@@ -57,9 +57,13 @@ func Register_BlogServiceHandlers(server *rest.Server, svcCtx *svc.ServiceContex
 func GetArticles_0_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.GetArticlesReq
-		if err := httpx.Parse(r, &req); err != nil {
-			svcCtx.ResponseEncodeFunc(r, w, nil, err)
-			return
+		bind.TryMyBestBind(r, &req)
+		if validate, ok := (interface{})(&req).(interface{ Validate() error }); ok {
+			err := validate.Validate()
+			if err != nil {
+				svcCtx.ResponseEncodeFunc(r, w, nil, err)
+				return
+			}
 		}
 		l := logic.NewGetArticlesLogic(r.Context(), svcCtx)
 		resp, err := l.GetArticles(&req)
@@ -69,9 +73,13 @@ func GetArticles_0_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 func GetArticles_1_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.GetArticlesReq
-		if err := httpx.Parse(r, &req); err != nil {
-			svcCtx.ResponseEncodeFunc(r, w, nil, err)
-			return
+		bind.TryMyBestBind(r, &req)
+		if validate, ok := (interface{})(&req).(interface{ Validate() error }); ok {
+			err := validate.Validate()
+			if err != nil {
+				svcCtx.ResponseEncodeFunc(r, w, nil, err)
+				return
+			}
 		}
 		l := logic.NewGetArticlesLogic(r.Context(), svcCtx)
 		resp, err := l.GetArticles(&req)
@@ -81,9 +89,13 @@ func GetArticles_1_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 func CreateArticle_0_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.Article
-		if err := httpx.Parse(r, &req); err != nil {
-			svcCtx.ResponseEncodeFunc(r, w, nil, err)
-			return
+		bind.TryMyBestBind(r, &req)
+		if validate, ok := (interface{})(&req).(interface{ Validate() error }); ok {
+			err := validate.Validate()
+			if err != nil {
+				svcCtx.ResponseEncodeFunc(r, w, nil, err)
+				return
+			}
 		}
 		l := logic.NewCreateArticleLogic(r.Context(), svcCtx)
 		resp, err := l.CreateArticle(&req)
