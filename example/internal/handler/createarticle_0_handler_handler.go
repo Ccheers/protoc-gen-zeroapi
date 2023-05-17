@@ -9,9 +9,10 @@ import (
 	svc "github.com/Ccheers/protoc-gen-zeroapi/example/internal/svc"
 )
 
+/// asdasd
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the Ccheers/protoc-gen-zeroapi package it is being compiled against.
-func CreateArticle_1_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func CreateArticle_0_Handler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req v1.Article
 		http1.TryMyBestBind(r, &req)

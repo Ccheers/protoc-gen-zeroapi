@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+
+	"google.golang.org/protobuf/compiler/protogen"
 )
 
 type service struct {
@@ -35,11 +37,11 @@ func (x methodSet) toSortedArray() []*method {
 }
 
 type method struct {
-	Name    string // SayHello
-	Num     int    // 一个 rpc 方法可以对应多个 http 请求
-	Request string // SayHelloReq
-	Reply   string // SayHelloResp
-	Comment string // 注释
+	Name    string           // SayHello
+	Num     int              // 一个 rpc 方法可以对应多个 http 请求
+	Request protogen.GoIdent // SayHelloReq
+	Reply   protogen.GoIdent // SayHelloResp
+	Comment string           // 注释
 	// http_rule
 	Path            string // gin 路由
 	Method          string // HTTP Method

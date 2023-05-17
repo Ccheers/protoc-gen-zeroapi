@@ -114,8 +114,8 @@ func buildMethodDesc(m *protogen.Method, httpMethod, path string, g *protogen.Ge
 	md := &method{
 		Name:            m.GoName,
 		Num:             methodSets[m.GoName],
-		Request:         g.QualifiedGoIdent(m.Input.GoIdent),
-		Reply:           g.QualifiedGoIdent(m.Output.GoIdent),
+		Request:         m.Input.GoIdent,
+		Reply:           m.Output.GoIdent,
 		Path:            path,
 		Method:          httpMethod,
 		Comment:         clearComment(string(m.Comments.Leading)),

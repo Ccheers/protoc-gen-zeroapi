@@ -3,7 +3,6 @@
 package handler
 
 import (
-	v1 "github.com/Ccheers/protoc-gen-zeroapi/example/api/product/app/v1"
 	svc "github.com/Ccheers/protoc-gen-zeroapi/example/internal/svc"
 	rest "github.com/zeromicro/go-zero/rest"
 )

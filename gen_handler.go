@@ -66,21 +66,19 @@ func genZeroService(outDir string, packageName protogen.GoImportPath, gen *proto
 	generateZeroMethodList(svcContextPackage, g, sd)
 	g.P("}")
 
-	for _, method := range s.Methods {
-		methods := genMethod(method, g)
-		for _, m := range methods {
-			filename := fmt.Sprintf("%s/internal/handler/%s_handler.go", outDir, strings.ToLower(m.HandlerName()))
-			_, err := os.Stat(filename)
-			if !errors.Is(err, os.ErrNotExist) {
-				continue
-			}
-			g := gen.NewGeneratedFile(filename, packageName)
-			g.P("package handler")
-			g.P()
-			g.P("// This is a compile-time assertion to ensure that this generated file")
-			g.P("// is compatible with the Ccheers/protoc-gen-zeroapi package it is being compiled against.")
-			generateZeroHandler(rootPackage, svcContextPackage, g, m)
+	methodSets = make(map[string]int)
+	for _, method := range sd.Methods {
+		filename := fmt.Sprintf("%s/internal/handler/%s_handler.go", outDir, strings.ToLower(method.HandlerName()))
+		_, err := os.Stat(filename)
+		if !errors.Is(err, os.ErrNotExist) {
+			continue
 		}
+		g := gen.NewGeneratedFile(filename, packageName)
+		g.P("package handler")
+		g.P()
+		g.P("// This is a compile-time assertion to ensure that this generated file")
+		g.P("// is compatible with the Ccheers/protoc-gen-zeroapi package it is being compiled against.")
+		generateZeroHandler(rootPackage, svcContextPackage, g, method)
 	}
 }
 
