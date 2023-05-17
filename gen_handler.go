@@ -1,8 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
+	"strings"
 
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -30,12 +33,12 @@ func genZeroHandler(outDir string, gen *protogen.Plugin, file *protogen.File) *p
 	g.P("// is compatible with the Ccheers/protoc-gen-zeroapi package it is being compiled against.")
 
 	for _, service := range file.Services {
-		genZeroService(rootPackage, svcContextPackage, file, g, service)
+		genZeroService(outDir, packageName, gen, rootPackage, svcContextPackage, file, g, service)
 	}
 	return g
 }
 
-func genZeroService(rootPackage, svcContextPackage protogen.GoImportPath, file *protogen.File, g *protogen.GeneratedFile, s *protogen.Service) {
+func genZeroService(outDir string, packageName protogen.GoImportPath, gen *protogen.Plugin, rootPackage, svcContextPackage protogen.GoImportPath, file *protogen.File, g *protogen.GeneratedFile, s *protogen.Service) {
 	if s.Desc.Options().(*descriptorpb.ServiceOptions).GetDeprecated() {
 		g.P("//")
 		g.P(deprecationComment)
@@ -62,7 +65,23 @@ func genZeroService(rootPackage, svcContextPackage protogen.GoImportPath, file *
 	g.P("func Register_", s.GoName, "Handlers(server *", restPackage.Ident("Server"), ", svcCtx *", svcContextPackage.Ident("ServiceContext"), ") {")
 	generateZeroMethodList(svcContextPackage, g, sd)
 	g.P("}")
-	generateZeroHandler(rootPackage, svcContextPackage, g, sd)
+
+	for _, method := range s.Methods {
+		methods := genMethod(method, g)
+		for _, m := range methods {
+			filename := fmt.Sprintf("%s/internal/handler/%s_handler.go", outDir, strings.ToLower(m.HandlerName()))
+			_, err := os.Stat(filename)
+			if !errors.Is(err, os.ErrNotExist) {
+				continue
+			}
+			g := gen.NewGeneratedFile(filename, packageName)
+			g.P("package handler")
+			g.P()
+			g.P("// This is a compile-time assertion to ensure that this generated file")
+			g.P("// is compatible with the Ccheers/protoc-gen-zeroapi package it is being compiled against.")
+			generateZeroHandler(rootPackage, svcContextPackage, g, m)
+		}
+	}
 }
 
 func generateZeroMethodList(svcContextPackage protogen.GoImportPath, g *protogen.GeneratedFile, s *service) {
@@ -93,29 +112,27 @@ func generateZeroMethodList(svcContextPackage protogen.GoImportPath, g *protogen
 	}
 }
 
-func generateZeroHandler(rootPackage, svcContextPackage protogen.GoImportPath, g *protogen.GeneratedFile, s *service) {
+func generateZeroHandler(rootPackage, svcContextPackage protogen.GoImportPath, g *protogen.GeneratedFile, m *method) {
 	logicPath := rootPackage + "/internal/logic"
-	for _, m := range s.Methods {
-		g.P("func ", m.HandlerName(), "(svcCtx *", svcContextPackage.Ident("ServiceContext"), ") ", netHTTPPkg.Ident("HandlerFunc"), " {")
+	g.P("func ", m.HandlerName(), "(svcCtx *", svcContextPackage.Ident("ServiceContext"), ") ", netHTTPPkg.Ident("HandlerFunc"), " {")
 
-		g.P("return func (w ", netHTTPPkg.Ident("ResponseWriter"), ", r *", netHTTPPkg.Ident("Request"), ") {")
-		g.P("var req ", m.Request)
+	g.P("return func (w ", netHTTPPkg.Ident("ResponseWriter"), ", r *", netHTTPPkg.Ident("Request"), ") {")
+	g.P("var req ", m.Request)
 
-		g.P(bindPackage.Ident("TryMyBestBind"), "(r, &req)")
+	g.P(bindPackage.Ident("TryMyBestBind"), "(r, &req)")
 
-		g.P("if validate,ok := (interface{})(&req).(interface{ Validate() error });ok {")
-		g.P("err := validate.Validate()")
-		g.P("if err != nil {")
-		g.P("svcCtx.ResponseEncodeFunc(r, w, nil, err)")
-		g.P("return")
-		g.P("}")
-		g.P("}")
+	g.P("if validate,ok := (interface{})(&req).(interface{ Validate() error });ok {")
+	g.P("err := validate.Validate()")
+	g.P("if err != nil {")
+	g.P("svcCtx.ResponseEncodeFunc(r, w, nil, err)")
+	g.P("return")
+	g.P("}")
+	g.P("}")
 
-		g.P("l := ", logicPath.Ident(fmt.Sprintf("New%sLogic", m.Name)), "(r.Context(), svcCtx)")
-		g.P("resp, err := l.", m.Name, "(&req)")
-		g.P("svcCtx.ResponseEncodeFunc(r, w, resp, err)")
-		g.P("}")
+	g.P("l := ", logicPath.Ident(fmt.Sprintf("New%sLogic", m.Name)), "(r.Context(), svcCtx)")
+	g.P("resp, err := l.", m.Name, "(&req)")
+	g.P("svcCtx.ResponseEncodeFunc(r, w, resp, err)")
+	g.P("}")
 
-		g.P("}")
-	}
+	g.P("}")
 }
