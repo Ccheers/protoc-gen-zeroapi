@@ -174,7 +174,7 @@ type Config struct {
 }
 
 func buildConfigFile(outDir string) {
-	filename := outDir + "/etc/config.local.yaml"
+	filename := outDir + "/etc/config.yaml"
 	_, err := os.Stat(filename)
 	if !os.IsNotExist(err) {
 		return
@@ -187,10 +187,25 @@ func buildConfigFile(outDir string) {
 	if err != nil {
 		panic(err)
 	}
-	const content = `Name: api
+	const content = `Name: helloworld-api
 Host: 0.0.0.0
 Port: 8888
 Mode: dev
+#监控
+Prometheus:
+  Host: 0.0.0.0
+  Port: 9091
+  Path: /metrics
+#链路追踪
+Telemetry:
+  Name: helloworld-api
+  Endpoint: http://simple-prod-collector.observability.svc:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+# 日志
+Log:
+  ServiceName: helloworld-api
+  Level: error
 `
 	_, err = fw.Write([]byte(content))
 	if err != nil {
